@@ -28,8 +28,8 @@ trait MovieService extends Protocols with OmdbServiceComponent with MovieReposit
 
   val routes: Route = {
     logRequestResult("movie-reservation") {
-      post {
-        path("movies") {
+      path("movies") {
+        post {
           entity(as[CreateMovieRequest]) { request =>
             complete {
               omdbService.fetchMovieTitle(request.imdbId).map[ToResponseMarshallable] { title =>
@@ -41,8 +41,8 @@ trait MovieService extends Protocols with OmdbServiceComponent with MovieReposit
           }
         }
       } ~
-        post {
-          pathPrefix("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
+        pathPrefix("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
+          post {
             complete {
               movieRepository.reserveSeat(imdbId, screenId).map[ToResponseMarshallable] { updatedCount =>
                 if (updatedCount == 0) {
@@ -52,10 +52,8 @@ trait MovieService extends Protocols with OmdbServiceComponent with MovieReposit
                 }
               }
             }
-          }
-        } ~
-        get {
-          pathPrefix("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
+          } ~
+          get {
             complete {
               movieRepository.retrieveMovie(imdbId, screenId).map[ToResponseMarshallable] {
                 case Some(movie) => OK -> movie

@@ -5,6 +5,7 @@ import spray.json.DefaultJsonProtocol
   */
 
 case class Movie(imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int = 0)
+
 case class CreateMovieRequest(imdbId: String, screenId: String, availableSeats: Int)
 
 case class OmdbResponse(Response: String, Error: Option[String], Title: String, imdbID: String)
