@@ -25,7 +25,9 @@ class MovieRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest wit
   val routes = movieRoutes.routes
 
   override protected def beforeAll(): Unit = {
-    MongoClient().getDatabase("movie-reservation").drop()
+    MongoClient().getDatabase("movie-reservation").drop().toFuture.map {
+      _ => println("db dropped..")
+    }
   }
 
   "Create Movie" should {

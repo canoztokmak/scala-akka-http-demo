@@ -6,7 +6,11 @@ import spray.json.DefaultJsonProtocol
   * Created by canoztokmak on 25/05/2017.
   */
 
-case class Movie(imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int = 0)
+case class Movie(imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int = 0) {
+  require(imdbId.nonEmpty)
+  require(screenId.nonEmpty)
+  require(availableSeats > 0)
+}
 
 case class CreateMovieRequest(imdbId: String, screenId: String, availableSeats: Int)
 
