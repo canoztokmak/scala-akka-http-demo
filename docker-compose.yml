@@ -3,7 +3,7 @@ version: '3'
 services:
   api:
     build: .
-    image: canoztokmak/movie-reservation
+    image: canoztokmak/scala-akka-http-demo
     links:
       - mongo:dockermongo
     ports:

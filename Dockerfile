@@ -1,7 +1,7 @@
 FROM hseeberger/scala-sbt
 
-COPY . ~/movie-reservation
-WORKDIR ~/movie-reservation
+COPY . ~/scala-akka-http-demo
+WORKDIR ~/scala-akka-http-demo
 
 EXPOSE 9000
 
