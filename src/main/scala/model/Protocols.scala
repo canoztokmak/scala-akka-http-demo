@@ -1,3 +1,5 @@
+package model
+
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -8,7 +10,7 @@ case class Movie(imdbId: String, screenId: String, movieTitle: String, available
 
 case class CreateMovieRequest(imdbId: String, screenId: String, availableSeats: Int)
 
-case class OmdbResponse(Response: String, Error: Option[String], Title: String, imdbID: String)
+case class OmdbResponse(Response: String, Error: Option[String], Title: Option[String], imdbID: Option[String])
 
 trait Protocols extends DefaultJsonProtocol {
   implicit val movieFormat = jsonFormat5(Movie)

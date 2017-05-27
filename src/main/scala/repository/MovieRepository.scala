@@ -1,13 +1,14 @@
-import akka.event.LoggingAdapter
+package repository
+
 import com.typesafe.config.ConfigFactory
-import org.mongodb.scala.{MongoClient, MongoCollection}
+import model.Movie
+import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.mongodb.scala.bson.ObjectId
+import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
+import org.mongodb.scala.bson.codecs.Macros._
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
-
-import org.mongodb.scala.bson.codecs.Macros._
-import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
-import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProviders}
+import org.mongodb.scala.{MongoClient, MongoCollection}
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -19,8 +20,6 @@ trait MovieRepositoryComponent {
 
   val movieRepository: MovieRepository
 
-  val logger: LoggingAdapter
-
   class MovieRepository {
     private object DBMovie {
       def apply(imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int): DBMovie =
@@ -28,9 +27,9 @@ trait MovieRepositoryComponent {
     }
     private case class DBMovie(_id: ObjectId, imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int = 0)
 
-    private val config = ConfigFactory.load()
-    private val host = config.getString("mongodb.host")
-    private val port = config.getString("mongodb.port")
+    private lazy val config = ConfigFactory.load()
+    private lazy val host = config.getString("mongodb.host")
+    private lazy val port = config.getString("mongodb.port")
 
     private lazy val generateMongoConnectionString: String = s"mongodb://$host:$port"
     private lazy val mongoClient = MongoClient(generateMongoConnectionString)

@@ -1,19 +1,22 @@
+package controller
+
 import akka.actor.ActorSystem
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{PathMatchers, Route}
 import akka.stream.ActorMaterializer
-import com.typesafe.config.Config
+import model.{CreateMovieRequest, Movie, Protocols}
+import repository.MovieRepositoryComponent
+import service.OmdbServiceComponent
 
 import scala.concurrent.ExecutionContextExecutor
 
 /**
   * Created by canoztokmak on 25/05/2017.
   */
-trait MovieService extends Protocols with OmdbServiceComponent with MovieRepositoryComponent {
+abstract class MovieRoutes extends Protocols with OmdbServiceComponent with MovieRepositoryComponent {
   // needed to run the route
   implicit val system: ActorSystem
   implicit val materializer: ActorMaterializer
@@ -23,19 +26,20 @@ trait MovieService extends Protocols with OmdbServiceComponent with MovieReposit
   val omdbService = new OmdbService
   val movieRepository = new MovieRepository
 
-  val config: Config
-  val logger: LoggingAdapter
-
   val routes: Route = {
     logRequestResult("movie-reservation") {
       path("movies") {
         post {
           entity(as[CreateMovieRequest]) { request =>
             complete {
-              omdbService.fetchMovieTitle(request.imdbId).map[ToResponseMarshallable] { title =>
-                movieRepository.addMovie(
-                  Movie(request.imdbId, request.screenId, title, request.availableSeats)
-                ).map(_ => Created)
+              omdbService.fetchMovieTitle(request.imdbId).map[ToResponseMarshallable] {
+                case Some(title) =>
+                  movieRepository.addMovie(
+                    Movie(request.imdbId, request.screenId, title, request.availableSeats)
+                  ).map(_ => Created)
+
+                case None =>
+                  NotFound
               }
             }
           }
