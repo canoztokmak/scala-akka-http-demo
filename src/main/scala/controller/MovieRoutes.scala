@@ -45,7 +45,7 @@ abstract class MovieRoutes extends Protocols with OmdbServiceComponent with Movi
           }
         }
       } ~
-        pathPrefix("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
+        path("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
           post {
             complete {
               movieRepository.reserveSeat(imdbId, screenId).map[ToResponseMarshallable] { updatedCount =>
