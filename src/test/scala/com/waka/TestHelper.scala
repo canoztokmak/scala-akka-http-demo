@@ -8,6 +8,7 @@ import com.waka.model.{CreateMovieRequest, Movie}
 object TestHelper {
   def imdbId = "tt1790800"
   def screenId = "screenId"
+  def screenId2 = "screenId2"
   def movieTitle = "Paper Shoes"
   def availableSeats = 100
 
@@ -18,4 +19,6 @@ object TestHelper {
   val movie = Movie(imdbId, screenId, movieTitle, availableSeats, 0)
 
   val invalidCreateMovieRequest = CreateMovieRequest("tt", "screenId", 100)
+
+  val validCreateMovieRequestOneAvailableSeat = CreateMovieRequest(imdbId, screenId2, 1)
 }

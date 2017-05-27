@@ -48,12 +48,21 @@ abstract class MovieRoutes extends Protocols with OmdbServiceComponent with Movi
         path("movies" / PathMatchers.Segment / "screens" / PathMatchers.Segment) { (imdbId, screenId) =>
           post {
             complete {
-              movieRepository.reserveSeat(imdbId, screenId).map[ToResponseMarshallable] { updatedCount =>
-                if (updatedCount == 0) {
-                  NotFound
-                } else {
-                  NoContent
-                }
+              movieRepository.retrieveMovie(imdbId, screenId).map[ToResponseMarshallable] {
+                case Some(movie) =>
+                  if (movie.availableSeats > movie.reservedSeats) {
+                    movieRepository.reserveSeat(imdbId, screenId).map[ToResponseMarshallable] { updatedCount =>
+                      if (updatedCount == 0) {
+                        NotFound
+                      } else {
+                        NoContent
+                      }
+                    }
+                  } else {
+                    Forbidden
+                  }
+
+                case None => NotFound
               }
             }
           } ~

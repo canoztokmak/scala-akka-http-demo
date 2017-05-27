@@ -60,6 +60,20 @@ class MovieRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest wit
         status shouldBe StatusCodes.NotFound
       }
     }
+
+    "return forbidden when there is no available seat" in {
+      Post("/movies", TestHelper.validCreateMovieRequestOneAvailableSeat) ~> routes ~> check {
+        status shouldBe StatusCodes.Created
+
+        Post(s"/movies/${TestHelper.imdbId}/screens/${TestHelper.screenId2}") ~> routes ~> check {
+          status shouldBe StatusCodes.NoContent
+
+          Post(s"/movies/${TestHelper.imdbId}/screens/${TestHelper.screenId2}") ~> routes ~> check {
+            status shouldBe StatusCodes.Forbidden
+          }
+        }
+      }
+    }
   }
 
   "Retrieve Movie" should {
