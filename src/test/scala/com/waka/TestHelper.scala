@@ -1,4 +1,6 @@
-import model.{CreateMovieRequest, Movie}
+package com.waka
+
+import com.waka.model.{CreateMovieRequest, Movie}
 
 /**
   * Created by canoztokmak on 27/05/2017.

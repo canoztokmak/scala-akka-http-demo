@@ -1,7 +1,7 @@
-package repository
+package com.waka.repository
 
-import com.typesafe.config.ConfigFactory
-import model.Movie
+import com.waka.Config
+import com.waka.model.Movie
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
@@ -27,9 +27,8 @@ trait MovieRepositoryComponent {
     }
     private case class DBMovie(_id: ObjectId, imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int = 0)
 
-    private lazy val config = ConfigFactory.load()
-    private lazy val host = config.getString("mongodb.host")
-    private lazy val port = config.getString("mongodb.port")
+    private lazy val host = Config.getMongoDBHost
+    private lazy val port = Config.getMongoDBPort
 
     private lazy val generateMongoConnectionString: String = s"mongodb://$host:$port"
     private lazy val mongoClient = MongoClient(generateMongoConnectionString)

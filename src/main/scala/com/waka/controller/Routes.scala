@@ -1,4 +1,4 @@
-package controller
+package com.waka.controller
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route

@@ -1,4 +1,4 @@
-package service
+package com.waka.service
 
 import java.io.IOException
 
@@ -11,8 +11,8 @@ import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
-import com.typesafe.config.ConfigFactory
-import model.{OmdbResponse, Protocols}
+import com.waka.Config
+import com.waka.model.{OmdbResponse, Protocols}
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -28,9 +28,8 @@ trait OmdbServiceComponent extends Protocols {
   val omdbService: OmdbService
 
   class OmdbService {
-    private lazy val config = ConfigFactory.load()
-    private lazy val apikey = config.getString("omdb.apikey")
-    private lazy val host = config.getString("omdb.host")
+    private lazy val apikey = Config.getOmdbApiKey
+    private lazy val host = Config.getOmdbHost
 
     private lazy val outboundConnectionFlow = Http().outgoingConnection(host)
 

@@ -1,4 +1,4 @@
-package model
+package com.waka.model
 
 import spray.json.DefaultJsonProtocol
 
