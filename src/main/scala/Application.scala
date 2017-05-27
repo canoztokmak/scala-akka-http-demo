@@ -18,4 +18,6 @@ object Application extends App with Routes {
   val config = ConfigFactory.load()
 
   Http().bindAndHandle(routes, config.getString("http.interface"), config.getInt("http.port"))
+
+  logger.debug("Movie Reservation app is started!!")
 }
