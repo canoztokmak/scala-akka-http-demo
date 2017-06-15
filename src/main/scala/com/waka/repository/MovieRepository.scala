@@ -15,12 +15,18 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 /**
   * Created by canoztokmak on 25/05/2017.
   */
+trait MovieRepository {
+  def addMovie(movie: Movie): Future[_]
+  def reserveSeat(imdbId: String, screenId: String): Future[Long]
+  def retrieveMovie(imdbId: String, screenId: String): Future[Option[Movie]]
+}
+
 trait MovieRepositoryComponent {
   implicit def executor: ExecutionContextExecutor
 
   val movieRepository: MovieRepository
 
-  class MovieRepository {
+  class MovieRepositoryMongo extends MovieRepository {
     private object DBMovie {
       def apply(imdbId: String, screenId: String, movieTitle: String, availableSeats: Int, reservedSeats: Int): DBMovie =
         DBMovie(new ObjectId, imdbId, screenId, movieTitle, availableSeats, reservedSeats)

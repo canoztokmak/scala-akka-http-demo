@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{PathMatchers, Route}
 import akka.stream.ActorMaterializer
 import com.waka.model.{CreateMovieRequest, Movie, Protocols}
-import com.waka.repository.MovieRepositoryComponent
+import com.waka.repository.{MovieRepository, MovieRepositoryComponent}
 import com.waka.service.OmdbServiceComponent
 
 import scala.concurrent.ExecutionContextExecutor
@@ -24,7 +24,7 @@ abstract class MovieRoutes extends Protocols with OmdbServiceComponent with Movi
   implicit def executor: ExecutionContextExecutor
 
   val omdbService = new OmdbService
-  val movieRepository = new MovieRepository
+  val movieRepository: MovieRepository = new MovieRepositoryMongo
 
   val routes: Route = {
     logRequestResult("movie-reservation") {

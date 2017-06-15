@@ -10,10 +10,10 @@ import scala.concurrent.ExecutionContextExecutor
   * Created by canoztokmak on 27/05/2017.
   */
 trait Routes {
-  implicit val sys: ActorSystem
-  implicit val mat: ActorMaterializer
+  implicit val sys: ActorSystem = ActorSystem()
+  implicit val mat: ActorMaterializer = ActorMaterializer()
   // needed for the future map/flatmap in the end
-  implicit def ec: ExecutionContextExecutor
+  implicit def ec: ExecutionContextExecutor = sys.dispatcher
 
   val movieRoutes = new MovieRoutes {
     override implicit def executor: ExecutionContextExecutor = ec

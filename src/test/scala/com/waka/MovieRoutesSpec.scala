@@ -7,28 +7,23 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.stream.ActorMaterializer
 import com.waka.controller.MovieRoutes
 import com.waka.model._
-import org.mongodb.scala.MongoClient
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContextExecutor
 
 /**
   * Created by canoztokmak on 27/05/2017.
   */
-class MovieRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest with Protocols with BeforeAndAfterAll {
+class MovieRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest with Protocols {
   val movieRoutes = new MovieRoutes {
     override implicit val system: ActorSystem = ActorSystem()
     override implicit def executor: ExecutionContextExecutor = system.dispatcher
     override implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+    override val movieRepository = new MovieRepositoryMock
   }
 
   val routes = movieRoutes.routes
-
-  override protected def beforeAll(): Unit = {
-    MongoClient().getDatabase("movie-reservation").drop().toFuture.map {
-      _ => println("db dropped..")
-    }
-  }
 
   "Create Movie" should {
     "create movie with valid a request" in {
